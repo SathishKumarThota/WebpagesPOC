@@ -1,0 +1,147 @@
+window.onload = function(){
+	var quickAddBtn = document.getElementById("QuickAdd");
+	var AddBtn = document.getElementById("Add");
+	var cancelBtn = document.getElementById("Cancel");
+	var quickAddFormDiv = document.querySelector('.quickaddForm');
+
+	var fullname = document.getElementById("fullname");
+	var phone = document.getElementById("phone");
+	var address = document.getElementById("address");
+	var city = document.getElementById("city");
+	var email = document.getElementById("email");
+
+	var addBookDiv = document.querySelector(".addbook");
+
+	var addressBook = [];
+
+
+	quickAddBtn.addEventListener("click" , function(){
+		quickAddFormDiv.style.display = "block";
+	});
+
+	cancelBtn.addEventListener("click", function(){
+		quickAddFormDiv.style.display = "none";
+	});
+
+	AddBtn.addEventListener("click",addToBook);
+
+	addBookDiv.addEventListener("click", removeEntry);
+
+	function jsonStructure(fullname,phone,address,city,email){
+		this.fullname = fullname;
+		this.phone = phone;
+		this.address = address;
+		this.city = city;
+		this.email = email;
+	}
+
+
+
+	function addToBook(){
+		var isNull = fullname.value!='' && phone.value != '' && address.value != '' && city.value !='' && email.value != '' ;
+			if (isNull){
+				var obj = new jsonStructure(fullname.value, phone.value,city.value, address.value,email.value);
+				addressBook.push(obj);
+				localStorage['addbook'] = JSON.stringify(addressBook);
+
+				quickAddFormDiv.style.display = "none";
+
+				clearForm();
+		     	showAddressBook();
+		
+		     }
+		}
+
+       	function removeEntry(e){
+       		if(e.target.classList.contains("delbutton")){
+       			var remID = e.target.getAttribute("data-id");
+       			addressBook.splice(remID, 1);
+       			localStorage['addbook'] = JSON.stringify(addressBook);
+       			showAddressBook();
+       		}
+       	}
+	function clearForm(){
+		var frm = document.querySelectorAll(".formFields");
+		for (var i in frm){
+			frm[i].value = '';
+		}
+
+	}
+
+	function showAddressBook(){
+
+		if (localStorage['addbook'] === undefined || localStorage['addbook'] === ""){
+			localStorage['addbook'] = "[]";
+			} else {
+				addressBook = JSON.parse(localStorage['addbook']);
+				// addBookDiv.innerHTML = '';
+				var table = document.getElementById("myTable");
+	                table.innerHTML = "";
+	                    var row = table.insertRow(0);
+					    var cell1 = row.insertCell(0);
+					    var cell2 = row.insertCell(1);
+					    var cell3 = row.insertCell(2);
+					    var cell4 = row.insertCell(3);
+					    var cell5 = row.insertCell(4);
+					    var cell6 = row.insertCell(5);
+
+
+					    cell1.innerHTML = "Name";
+					    cell2.innerHTML = "Email";
+					    cell3.innerHTML = "Phone";
+					    cell4.innerHTML = "Address";
+					    cell5.innerHTML = "City";
+					    cell6.innerHTML = "Delete";
+
+
+
+				for(var n in addressBook){
+					// var str = '<div class="entry">';
+				 //        str += '<div class="name"><p>' + addressBook[n].fullname + '</p></div>';
+				 //        str += '<div class="email"><p>' + addressBook[n].email + '</p></div>';
+				 //        str += '<div class="phone"><p>' + addressBook[n].phone + '</p></div>';
+				 //        str += '<div class="address"><p>' + addressBook[n].address +'</p></div>';
+				 //        str += '<div class="city"><p>'  +addressBook[n].city +'</p></div>';
+			  //           str += '<div class="del"><a href="#" class="delbutton" data-id = "' + n + '">Delete</a></div>';
+	    //                 str += '</div>';
+	    //                 addBookDiv.innerHTML += str;
+
+	    			// var str = '<table><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>City</th></tr><tr>';
+				    //     str += '<td class="name"><p>' + addressBook[n].fullname + '</p></td>';
+				    //     str += '<td class="email"><p>' + addressBook[n].email + '</p></td>';
+				    //     str += '<td class="phone"><p>' + addressBook[n].phone + '</p></td>';
+				    //     str += '<td class="address"><p>' + addressBook[n].address +'</p></td>';
+				    //     str += '<td class="city"><p>'  +addressBook[n].city +'</p></td>';
+			     //        str += '<td class="del"><a href="#" class="delbutton" data-id = "' + n + '">Delete</a></div>';
+	       //              str += '</tr></table>';
+	       //              document.getElementById("table").append(str);
+	                    //addBookDiv.innerHTML += str;
+
+	                    
+					    var row = table.insertRow(1);
+					    var cell1 = row.insertCell(0);
+					    var cell2 = row.insertCell(1);
+					    var cell3 = row.insertCell(2);
+					    var cell4 = row.insertCell(3);
+					    var cell5 = row.insertCell(4);
+					    var cell6 = row.insertCell(5);
+
+
+					    cell1.innerHTML = addressBook[n].fullname.toUpperCase() ;
+					    cell2.innerHTML = addressBook[n].email.toUpperCase();
+					    cell3.innerHTML = addressBook[n].phone;
+					    cell4.innerHTML = addressBook[n].address.toUpperCase();
+					    cell5.innerHTML = addressBook[n].city.toUpperCase();
+					    cell6.innerHTML = "<button"+" class='delbutton'"+"data-id = " + n + ">"+"Delete"+"</button>"
+
+
+
+
+				}
+			
+		}
+
+	}
+
+	showAddressBook();
+}
